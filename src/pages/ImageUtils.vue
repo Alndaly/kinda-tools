@@ -29,7 +29,6 @@ const counterLabelFn = ({ totalSize, filesNumber, maxFiles }: any) => {
 }
 
 const uploadImage = async () => {
-  console.log(image.value)
   if (image.value) {
     const attachment = await uploadFile(await getOssClient('kinda-tools'), '/image', image.value);
     console.log(attachment)

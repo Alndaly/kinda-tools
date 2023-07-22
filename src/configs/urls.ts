@@ -1,1 +1,1 @@
-export const signatureUrlPrefix = process.env.DEV ? '/signatureApi' : 'https://tools.kinda.info';
+export const signatureUrlPrefix = process.env.DEV ? '/signatureApi' : 'https://api.kinda.info/kinda/tools';
