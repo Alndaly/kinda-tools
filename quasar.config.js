@@ -102,13 +102,13 @@ module.exports = configure(function (/* ctx */) {
       // https: true
       open: true, // opens browser window automatically
       proxy: {
-        '/signatureApi': {
+        '/toolsApi': {
           // target: 'http://127.0.0.1:8000',
           target: 'https://api.kinda.info/kinda/tools',
           changeOrigin: true,
           // secure: false,
           rewrite: (path) => {
-            return path.replace(/^\/signatureApi/, '');
+            return path.replace(/^\/toolsApi/, '');
           },
         },
       },

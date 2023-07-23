@@ -19,14 +19,13 @@
             <input ref="inputRef" multiple="false" accept="image/*" name="image" id="image" type="file" v-show="false"
               @change="handleChange" />
           </div>
-          <q-btn color="primary" label="压缩图片" />
         </div>
       </template>
 
       <template v-slot:after>
         <div class="q-pa-md">
-          <div>压缩后：</div>
-          <q-btn color="primary" label="下载" @click="downLoadZipedImage" />
+          <q-btn color="primary" label="压缩图片" @click="onZipImage" :loading="zipStatus" />
+          <q-img v-if="ziped_image_url" :src="ziped_image_url" :ratio="16 / 9" />
         </div>
       </template>
 
@@ -35,15 +34,16 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
-import { uploadFile } from '@/services/file';
-import { getOssClient } from '@/services/file';
+import { ref } from 'vue';
+import { uploadFile, getOssClient } from '@/services/file';
+import { imageZip } from '@/services/image'
+import { to } from '@/utils/request';
+import message from '@/utils/message';
 
 const inputRef = ref(null);
 const uploadStatus = ref(false);
 const zipStatus = ref(false);
-const origin_image = ref<File | null>(null);
-const ziped_image = ref<string | null>(null);
+const ziped_image_url = ref<string | null>(null);
 const origin_image_url = ref<string | null>(null);
 const splitterModel = ref(50); // start at 50%
 
@@ -66,14 +66,20 @@ const handleChange = async (e: Event) => {
   const files = (e.target as HTMLInputElement).files
   if (!files) return
   uploadStatus.value = true;
-  origin_image.value = files[0];
   const data = await uploadImage(files[0]);
   origin_image_url.value = data
   uploadStatus.value = false;
 }
 
-const downLoadZipedImage = () => {
-  console.log(111)
+const onZipImage = async () => {
+  const [res, err] = await to(imageZip({ image_url: origin_image_url.value, zip_degree: 0.2 }));
+  if (err) {
+    message.error('出错啦');
+    return;
+  }
+  console.log(res);
+  ziped_image_url.value = res.data.image_url;
+  message.success('压缩成功');
 }
 
 const myTweak = (offset: number) => {
@@ -108,6 +114,5 @@ const myTweak = (offset: number) => {
   100% {
     transform: rotate(360deg);
   }
-
 }
 </style>
