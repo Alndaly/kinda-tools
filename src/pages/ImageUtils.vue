@@ -23,9 +23,14 @@
       </template>
 
       <template v-slot:after>
-        <div class="q-pa-md">
-          <q-btn color="primary" label="压缩图片" @click="onZipImage" :loading="zipStatus" />
-          <q-img v-if="ziped_image_url" :src="ziped_image_url" />
+        <div class="q-pa-md column q-gutter-md">
+          <div class="row justify-between">
+            <q-input type="number" :rules="zipDegreeRules" outlined class="col-xs-12 col-sm-12 col-md-9" dense
+              v-model="zip_degree" label="压缩等级" hint="0-100对应压缩后文件由小到大" />
+            <q-btn class="col-xs-12 col-sm-12 col-md-2" :class="$q.screen.lt.sm ? 'q-mt-md' : ''" color="primary"
+              label="压缩图片" @click="onZipImage" :loading="zipStatus" />
+          </div>
+          <q-img v-if="ziped_image_url" :src="ziped_image_url" class="rounded-borders" :ratio="1" />
         </div>
       </template>
 
@@ -38,14 +43,22 @@ import { ref } from 'vue';
 import { uploadFile, getOssClient } from '@/services/file';
 import { imageZip } from '@/services/image'
 import { to } from '@/utils/request';
+import { useQuasar } from 'quasar';
 import message from '@/utils/message';
 
+const $q = useQuasar();
 const inputRef = ref(null);
 const uploadStatus = ref(false);
 const zipStatus = ref(false);
 const ziped_image_url = ref<string | null>(null);
 const origin_image_url = ref<string | null>(null);
 const splitterModel = ref(50); // start at 50%
+const zip_degree = ref(50);
+
+const zipDegreeRules = [
+  (val: number) => (val <= 100 && val >= 0) || '请输入0-100内的整数',
+  (val: number) => (val % 1 == 0) || '请输入整数',
+]
 
 const uploadImage = async (file: File) => {
   if (file) {
@@ -73,7 +86,7 @@ const handleChange = async (e: Event) => {
 
 const onZipImage = async () => {
   zipStatus.value = true;
-  const [res, err] = await imageZip({ image_url: origin_image_url.value, zip_degree: 20 });
+  const [res, err] = await imageZip({ image_url: origin_image_url.value, zip_degree: zip_degree.value });
   if (err) {
     message.error('出错啦');
     zipStatus.value = false;
