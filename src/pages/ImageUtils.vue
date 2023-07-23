@@ -30,8 +30,11 @@ const counterLabelFn = ({ totalSize, filesNumber, maxFiles }: any) => {
 
 const uploadImage = async () => {
   if (image.value) {
-    const attachment = await uploadFile(await getOssClient('kinda-tools'), '/image', image.value);
-    console.log(attachment)
+    const ossClient = await getOssClient('kinda-tools');
+    const attachment = await uploadFile(ossClient, '/image', image.value);
+    console.log(111, attachment)
+    const url = ossClient && ossClient.signatureUrl(attachment.name, { expires: 600 });
+    console.log(222, url)
   }
 }
 

@@ -28,6 +28,5 @@ export const uploadFile = async (ossClient: any, fileLocation: string, file: Fil
     `${fileLocation}/${fileName + '.' + file.name.split('.').slice(-1)[0]}`,
     file,
   );
-  console.log(111, result)
   return result;
 }
