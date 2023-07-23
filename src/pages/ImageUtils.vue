@@ -25,7 +25,7 @@
       <template v-slot:after>
         <div class="q-pa-md">
           <q-btn color="primary" label="压缩图片" @click="onZipImage" :loading="zipStatus" />
-          <q-img v-if="ziped_image_url" :src="ziped_image_url" :ratio="16 / 9" />
+          <q-img v-if="ziped_image_url" :src="ziped_image_url" />
         </div>
       </template>
 
@@ -72,12 +72,15 @@ const handleChange = async (e: Event) => {
 }
 
 const onZipImage = async () => {
-  const [res, err] = await to(imageZip({ image_url: origin_image_url.value, zip_degree: 0.2 }));
+  zipStatus.value = true;
+  const [res, err] = await imageZip({ image_url: origin_image_url.value, zip_degree: 20 });
   if (err) {
     message.error('出错啦');
+    zipStatus.value = false;
     return;
   }
   console.log(res);
+  zipStatus.value = false;
   ziped_image_url.value = res.data.image_url;
   message.success('压缩成功');
 }
