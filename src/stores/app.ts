@@ -15,10 +15,11 @@ export const useAppStore = defineStore('app', {
   getters: {
     version: (state) => state._version,
     title: (state) => state._title,
+    darkThemeStatus: (state) => state._darkThemeStatus
   },
   actions: {
-    setDarkThemeStatus(status: boolean) {
-      this._darkThemeStatus = status
+    setDarkThemeStatus(newStatus: boolean) {
+      this._darkThemeStatus = newStatus
     }
   },
 });

@@ -1,6 +1,9 @@
 <template>
-  <q-page :style-fn="myTweak">
-    <div class="q-pa-md">
+  <q-page :style-fn="myTweak" class="q-pa-md">
+    <q-banner rounded class="bg-primary text-white">
+      压缩等级不完全代表压缩比例，即压缩等级X形成的图片大小不等于原图片大小*X/100。
+    </q-banner>
+    <div class="q-mt-md">
       <div class="full-width image-upload-box flex justify-center items-center rounded-borders column cursor-pointer"
         :style="{ backgroundColor: uploadStatus ? '#f2f2f2' : '', backgroundImage: `url(${origin_image_url})` }"
         @click="onUploadFile">
@@ -20,7 +23,7 @@
       <div v-if="origin_image_size">原文件大小: {{ origin_image_size }} KB</div>
     </div>
 
-    <div class="q-pa-md column">
+    <div class="q-mt-md column">
       <q-form @submit="onZipImage">
         <div class="column q-gutter-sm">
           <div class="column">
@@ -35,9 +38,13 @@
 
       <div v-if="!ziped_image_url" class="success-ziped-box flex full-width items-center justify-center rounded-borders">
         压缩完成后的图片将会显示在这里</div>
-      <div class="column q-gutter-xs">
-        <q-img v-if="ziped_image_url" :src="ziped_image_url" class="rounded-borders" :ratio="1" />
-        <div v-if="origin_image_size">压缩后文件大小: {{ ziped_image_size }} KB</div>
+      <div>
+        <q-img fit="cover" class="rounded-borders ziped-image" v-if="ziped_image_url" :src="ziped_image_url">
+        </q-img>
+        <div class="row q-gutter-md">
+          <div v-if="ziped_image_size">压缩后文件大小: {{ ziped_image_size }} KB</div>
+          <a v-if="ziped_image_url" :href="ziped_image_url" download>下载压缩后图片</a>
+        </div>
       </div>
     </div>
 
@@ -128,7 +135,7 @@ const myTweak = (offset: number) => {
 }
 
 .image-upload-box:hover {
-  background-color: #f2f2f2;
+  background-color: #cccccc33;
 }
 
 .refresh {

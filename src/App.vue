@@ -15,8 +15,9 @@ if (hour > 18 || hour < 6) {
   // 设置为夜间模式
   $q.dark.set(true);
   appStore.setDarkThemeStatus(true);
+} else {
+  // 设置为夜间模式
+  $q.dark.set(false);
+  appStore.setDarkThemeStatus(false);
 }
-// 设置为夜间模式
-$q.dark.set(false);
-appStore.setDarkThemeStatus(false);
 </script>
