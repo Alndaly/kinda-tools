@@ -1,40 +1,46 @@
 <template>
   <q-page :style-fn="myTweak">
-    <q-splitter v-model="splitterModel" class="full-width" style="height: 100%;">
-      <template v-slot:before>
-        <div class="q-pa-md">
-          <div class="full-width image-upload-box flex justify-center items-center rounded-borders column cursor-pointer"
-            :style="{ backgroundColor: uploadStatus ? '#f2f2f2' : '', backgroundImage: `url(${origin_image_url})` }"
-            @click="onUploadFile">
-            <div class="column justify-center items-center q-gutter-xs" v-if="!uploadStatus">
-              <q-icon name="cloud_upload" style="font-size: 2em" class="text-primary" />
-              <div>
-                点击上传图片
-              </div>
-            </div>
-            <div class="column justify-center items-center q-gutter-xs" v-if="uploadStatus">
-              <q-icon name="refresh" style="font-size: 2em" class="text-primary refresh" />
-              <div>上传中...</div>
-            </div>
-            <input ref="inputRef" multiple="false" accept="image/*" name="image" id="image" type="file" v-show="false"
-              @change="handleChange" />
+    <div class="q-pa-md">
+      <div class="full-width image-upload-box flex justify-center items-center rounded-borders column cursor-pointer"
+        :style="{ backgroundColor: uploadStatus ? '#f2f2f2' : '', backgroundImage: `url(${origin_image_url})` }"
+        @click="onUploadFile">
+        <div class="column justify-center items-center q-gutter-xs" v-if="!uploadStatus">
+          <q-icon name="cloud_upload" style="font-size: 2em" class="text-primary" />
+          <div>
+            点击上传图片
           </div>
         </div>
-      </template>
+        <div class="column justify-center items-center q-gutter-xs" v-if="uploadStatus">
+          <q-icon name="refresh" style="font-size: 2em" class="text-primary refresh" />
+          <div>上传中...</div>
+        </div>
+        <input ref="inputRef" multiple="false" accept="image/*" name="image" id="image" type="file" v-show="false"
+          @change="handleChange" />
+      </div>
+      <div v-if="origin_image_size">原文件大小: {{ origin_image_size }} KB</div>
+    </div>
 
-      <template v-slot:after>
-        <div class="q-pa-md column q-gutter-md">
-          <div class="row justify-between">
+    <div class="q-pa-md column">
+      <q-form @submit="onZipImage">
+        <div class="column q-gutter-sm">
+          <div class="column">
             <q-input type="number" :rules="zipDegreeRules" outlined class="col-xs-12 col-sm-12 col-md-9" dense
               v-model="zip_degree" label="压缩等级" hint="0-100对应压缩后文件由小到大" />
-            <q-btn class="col-xs-12 col-sm-12 col-md-2" :class="$q.screen.lt.sm ? 'q-mt-md' : ''" color="primary"
-              label="压缩图片" @click="onZipImage" :loading="zipStatus" />
           </div>
-          <q-img v-if="ziped_image_url" :src="ziped_image_url" class="rounded-borders" :ratio="1" />
+          <div class="row justify-end q-mb-md">
+            <q-btn color="primary" label="压缩图片" type="submit" :loading="zipStatus" />
+          </div>
         </div>
-      </template>
+      </q-form>
 
-    </q-splitter>
+      <div v-if="!ziped_image_url" class="success-ziped-box flex full-width items-center justify-center rounded-borders">
+        压缩完成后的图片将会显示在这里</div>
+      <div class="column q-gutter-xs">
+        <q-img v-if="ziped_image_url" :src="ziped_image_url" class="rounded-borders" :ratio="1" />
+        <div v-if="origin_image_size">压缩后文件大小: {{ ziped_image_size }} KB</div>
+      </div>
+    </div>
+
   </q-page>
 </template>
 
@@ -51,8 +57,9 @@ const inputRef = ref(null);
 const uploadStatus = ref(false);
 const zipStatus = ref(false);
 const ziped_image_url = ref<string | null>(null);
+const ziped_image_size = ref<number | null>(null);
 const origin_image_url = ref<string | null>(null);
-const splitterModel = ref(50); // start at 50%
+const origin_image_size = ref<number | null>(null);
 const zip_degree = ref(50);
 
 const zipDegreeRules = [
@@ -81,6 +88,7 @@ const handleChange = async (e: Event) => {
   uploadStatus.value = true;
   const data = await uploadImage(files[0]);
   origin_image_url.value = data
+  origin_image_size.value = files[0].size / 1024
   uploadStatus.value = false;
 }
 
@@ -95,6 +103,7 @@ const onZipImage = async () => {
   console.log(res);
   zipStatus.value = false;
   ziped_image_url.value = res.data.image_url;
+  ziped_image_size.value = res.data.image_size / 1024;
   message.success('压缩成功');
 }
 
@@ -111,6 +120,11 @@ const myTweak = (offset: number) => {
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
+}
+
+.success-ziped-box {
+  min-height: 200px;
+  border: 1px dotted #aaa;
 }
 
 .image-upload-box:hover {
