@@ -8,6 +8,8 @@
         <q-toolbar-title class="cursor-pointer" @click="goHomePage">
           {{ title }}
         </q-toolbar-title>
+        <q-btn flat label="个人博客" icon-right="share" @click="goBlog" />
+        <a v-show="false" ref="blogBtnRef" href="http://alndaly.github.io" target="_blank" rel="noopener noreferrer"></a>
         <q-toggle :model-value="darkThemeStatus" @update:model-value="toggleDarkTheme" checked-icon="dark_mode"
           color="blue" unchecked-icon="sunny" />
         <div>当前版本：{{ version }}</div>
@@ -29,6 +31,8 @@ import { storeToRefs } from 'pinia';
 import { useAppStore } from 'src/stores/app';
 import { useQuasar } from 'quasar';
 
+const blogBtnRef = ref(null);
+
 const $q = useQuasar();
 
 const appStore = useAppStore();
@@ -43,5 +47,9 @@ const router = useRouter()
 
 const goHomePage = () => {
   router.push('/')
+}
+
+const goBlog = () => {
+  blogBtnRef.value && blogBtnRef.value.click()
 }
 </script>

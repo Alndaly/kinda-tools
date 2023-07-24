@@ -20,13 +20,13 @@ import KindaTools from 'components/KindaTools.vue';
 import { ref } from 'vue';
 
 const myTweak = (offset: number) => {
-  return { height: offset ? `calc(100vh - ${offset}px)` : '100vh' }
+  return { 'min-height': offset ? `calc(100vh - ${offset}px)` : '100vh' }
 }
 </script>
 <style lang="scss">
 .body--dark {
   .index::after {
-    background-color: #00000044;
+    background-color: #00000055;
   }
 }
 
@@ -42,7 +42,7 @@ const myTweak = (offset: number) => {
   position: absolute;
   left: 0;
   top: 0;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(25px);
   width: 100%;
   height: 100%;
 }
