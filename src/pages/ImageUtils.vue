@@ -41,7 +41,7 @@
       <div>
         <q-img fit="cover" class="rounded-borders ziped-image" v-if="ziped_image_url" :src="ziped_image_url">
         </q-img>
-        <div class="row q-gutter-md">
+        <div class="row q-gutter-md q-mb-md">
           <div v-if="ziped_image_size">压缩后文件大小: {{ ziped_image_size }} KB</div>
           <a v-if="ziped_image_url" :href="ziped_image_url" download>下载压缩后图片</a>
         </div>

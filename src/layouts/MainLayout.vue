@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="hHh Lpr lFf">
-    <q-header>
+  <q-layout view="hHh lpR fff">
+    <q-header reveal>
       <q-toolbar>
         <q-avatar class="cursor-pointer" @click="goHomePage">
           <img src="https://oss.kinda.info/image/202307240013660.png" />
@@ -18,6 +18,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
   </q-layout>
 </template>
 
