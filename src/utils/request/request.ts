@@ -32,13 +32,16 @@ export const request = (url: string, data: any, method: 'POST' | 'GET') => {
       finalUrl = finalUrl + '?' + qs.stringify(data)
     }
     const response = await fetch(finalUrl, options);
-    // 请求正常
-    const backData: ApiData = await response.json()
-    if (backData && backData.code !== 20000) {
-      reject(backData)
-      return
-    } else {
-      resolve(backData)
+    if (!response.ok) {
+      reject(response)
+      return;
     }
+    if (response.headers.get('Content-Type') === 'application/json') {
+      // 请求正常
+      const backData: ApiData = await response.json()
+      resolve(backData)
+      return;
+    }
+    resolve(response.body)
   })
 }

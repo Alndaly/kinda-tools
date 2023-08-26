@@ -31,12 +31,11 @@ module.exports = configure(function (/* ctx */) {
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
       'i18n',
-
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: [
-      'app.scss'
+      'app.scss',
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -55,6 +54,10 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      transpile: true,
+      transpileDependencies: [
+        /quasar-ui-qmarkdown[\\/]src/
+      ],
       target: {
         browser: [ 'es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1' ],
         node: 'node16'
@@ -103,8 +106,8 @@ module.exports = configure(function (/* ctx */) {
       open: true, // opens browser window automatically
       proxy: {
         '/toolsApi': {
-          // target: 'http://127.0.0.1:8000',
-          target: 'https://api.kinda.info/kinda/tools',
+          target: 'http://127.0.0.1:8000',
+          // target: 'https://api.kinda.info/kinda/tools',
           changeOrigin: true,
           // secure: false,
           rewrite: (path) => {

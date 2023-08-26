@@ -10,6 +10,10 @@ const routes: RouteRecordRaw[] = [
         path: 'image',
         component: () => import('pages/ImageUtils.vue'),
       },
+      {
+        path: 'ai/chat',
+        component: () => import('pages/AiChat.vue'),
+      },
     ],
   },
 
