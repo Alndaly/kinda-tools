@@ -1,16 +1,14 @@
 <template>
   <q-page :style-fn='myTweak' class='q-pa-md flex column'>
-    <div class='chat-box q-pa-md' ref='chatBox'>
-      <div class='row justify-center'>
-        <div class='full-width'>
-          <q-chat-message v-for='item in  messages ' :sent='item.sent' :key='item.id' :name='item.name'
-            :avatar='item.avatar' :stamp='item.time ? differTime(item.time) : null'>
-            <q-spinner-dots size="2rem" v-if="item.loading" />
-            <div v-if="item.text">
-              {{ item.text }}
-            </div>
-          </q-chat-message>
-        </div>
+    <div class='chat-box' ref='chatBox'>
+      <div class='full-width'>
+        <q-chat-message v-for='item in  messages ' :sent='item.sent' :key='item.id' :name='item.name'
+          :avatar='item.avatar' :stamp='item.time ? differTime(item.time) : null'>
+          <q-spinner-dots size="2rem" v-if="item.loading" />
+          <div v-if="item.text">
+            {{ item.text }}
+          </div>
+        </q-chat-message>
       </div>
     </div>
     <div class='q-pa-md row'>
@@ -27,7 +25,7 @@
 </template>
 <script lang='ts' setup>
 import { chat } from '@/services/ai'
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { differTime } from '@/utils/time';
 
 const text = ref('');
@@ -51,17 +49,18 @@ const onClearText = () => {
   text.value = ''
 }
 
-const aiStartThinking = () => {
+const aiStartThinking = async () => {
   messages.value.push({
     name: 'ai',
     loading: true,
     avatar: 'https://oss.kinda.info/image/202308212150138.PNG',
     text: ''
   })
+  await nextTick();
   scrollToBottom();
 }
 
-const addMyMessage = (text: string) => {
+const addMyMessage = async (text: string) => {
   const timeStamp = Date.now()
   messages.value.push({
     name: 'me',
@@ -72,6 +71,7 @@ const addMyMessage = (text: string) => {
     time: timeStamp
 
   })
+  await nextTick();
   scrollToBottom();
 }
 
@@ -114,9 +114,10 @@ const onSendText = async () => {
     let aiMessage = messages.value[messages.value.length - 1]
     message.choices[0].delta.content && (aiMessage.text += message.choices[0].delta.content);
     messages.value[messages.value.length - 1] = aiMessage
+    nextTick().then(() => scrollToBottom());
   }
 
-  function aiSaying() {
+  async function aiSaying() {
     const timeStamp = Date.now();
     messages.value[messages.value.length - 1].time = timeStamp;
     reader.read().then(({ done, value }: any) => {
