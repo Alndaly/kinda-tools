@@ -1,12 +1,73 @@
 import { v4 as uuidv4 } from 'uuid';
 import cache from '@/utils/cache/index';
 import qs from 'qs';
+import { useUserStore } from '@/stores/user';
+import message from '../message';
 
 interface ApiData {
   code: number,
   message: string,
   data: any,
 }
+
+// 默认刷新状态，确保一旦遇到token过期的状况就能更新
+let isTokenRefreshing = true;
+// 防止多次请求token获取接口（限制三次，三次以后直接显示账号信息错误）
+let refreshTokenTimes = 0;
+// 防止access_token错误情况下而refresh_token的无限请求边际情况
+// let wrongAuth = 0;
+// 被拦截的请求数组
+let subscribers: any[] = [];
+
+// 处理被缓存的请求
+function onAccessTokenFetched() {
+  subscribers.forEach((callback) => {
+    callback();
+  });
+  // 处理完后清空缓存请求数组
+  subscribers = [];
+}
+
+async function refreshToken() {
+  if (refreshTokenTimes >= 3) {
+    message.error('登陆信息已过期，即将跳转到登陆页面');
+    cache.clear()
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
+    return;
+  }
+  isTokenRefreshing = true;
+  refreshTokenTimes++;
+  const userStore = useUserStore();
+  const res = await userStore.onRefreshLoginUser();
+  isTokenRefreshing = false;
+  if (res) {
+    onAccessTokenFetched();
+  } else {
+    refreshToken()
+  }
+}
+
+// 将请求缓存到请求数组中
+function addSubscriber(callback: any) {
+  subscribers.push(callback)
+}
+
+const checkTokenRefreshStatus = (url: string, data: any, method: any) => {
+  // 刷新token的函数,这需要添加一个开关，防止重复请求
+  if (isTokenRefreshing) {
+    refreshToken();
+  }
+  isTokenRefreshing = false;
+  // 将当前的请求保存在观察者数组中
+  const retryOriginalRequest = new Promise((resolve) => {
+    addSubscriber(() => {
+      resolve(request(url, data, method));
+    });
+  });
+  return retryOriginalRequest;
+};
 
 export const request = (url: string, data: any, method: 'POST' | 'GET') => {
   const headers = new Headers();
@@ -33,7 +94,10 @@ export const request = (url: string, data: any, method: 'POST' | 'GET') => {
     }
     const response = await fetch(finalUrl, options);
     if (!response.ok) {
-      reject(response)
+      // 权限问题
+      if (response.status === 401) {
+        resolve(checkTokenRefreshStatus(url, data, method))
+      }
       return;
     }
     if (response.headers.get('Content-Type') === 'application/json') {

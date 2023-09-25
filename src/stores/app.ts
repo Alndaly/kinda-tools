@@ -9,7 +9,7 @@ interface AppStore {
 export const useAppStore = defineStore('app', {
   state: (): AppStore => ({
     _version: '0.0.1',
-    _title: 'Kinda的工具箱',
+    _title: 'UniAPI管理台',
     _darkThemeStatus: false
   }),
   getters: {

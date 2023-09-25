@@ -105,13 +105,13 @@ module.exports = configure(function (/* ctx */) {
       // https: true
       open: true, // opens browser window automatically
       proxy: {
-        '/toolsApi': {
+        '/uniApi': {
           target: 'http://127.0.0.1:8000',
-          // target: 'https://api.kinda.info/kinda/tools',
+          // target: 'https://api.uniapi.top',
           changeOrigin: true,
           // secure: false,
           rewrite: (path) => {
-            return path.replace(/^\/toolsApi/, '');
+            return path.replace(/^\/uniApi/, '');
           },
         },
       },
