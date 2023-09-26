@@ -1,4 +1,4 @@
-import { getUserInfo, loginUser, createUserEmail, createUser, refreshLoginUser } from '@/services/user'
+import { getUserInfo, loginUser, createUserEmail, createUser, refreshLoginUser, updateUserInfo } from '@/services/user'
 import { defineStore } from 'pinia';
 import cache from '@/utils/cache/index'
 import message from '../utils/message';
@@ -11,11 +11,19 @@ interface UserInfoState {
     username: string,
     email: string,
   }
+  _password: string
 }
 
 interface UserLogin {
   email: string,
   password: string,
+}
+
+interface UserUpdate {
+  email: string,
+  code: string,
+  avatar: string,
+  nickname: string
 }
 
 export const useUserStore = defineStore('user', {
@@ -27,11 +35,20 @@ export const useUserStore = defineStore('user', {
       avatar: '',
       email: '',
     },
+    _password: ''
   }),
   getters: {
     userInfo: (state) => state._userInfo,
   },
   actions: {
+    async onUpdateUserInfo({ email, code, avatar, nickname }: UserUpdate) {
+      const [res, err] = await updateUserInfo({ email, code, avatar, nickname })
+      if (err) {
+        message.error(err?.message || '出错啦')
+        return
+      }
+      return true
+    },
     async onLoginUser({ email, password }: UserLogin) {
       const [res, err] = await loginUser({
         email,

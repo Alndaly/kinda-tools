@@ -4,18 +4,10 @@ import qs from 'qs';
 import { useUserStore } from '@/stores/user';
 import message from '../message';
 
-interface ApiData {
-  code: number,
-  message: string,
-  data: any,
-}
-
 // 默认刷新状态，确保一旦遇到token过期的状况就能更新
 let isTokenRefreshing = true;
 // 防止多次请求token获取接口（限制三次，三次以后直接显示账号信息错误）
 let refreshTokenTimes = 0;
-// 防止access_token错误情况下而refresh_token的无限请求边际情况
-// let wrongAuth = 0;
 // 被拦截的请求数组
 let subscribers: any[] = [];
 
@@ -72,6 +64,7 @@ const checkTokenRefreshStatus = (url: string, data: any, method: any) => {
 export const request = (url: string, data: any, method: 'POST' | 'GET') => {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
+  headers.append('Trace-Id', uuidv4())
   if (cache.directGet('access_token')) {
     headers.append('Authorization', 'Bearer ' + cache.directGet('access_token'));
   }
@@ -86,7 +79,7 @@ export const request = (url: string, data: any, method: 'POST' | 'GET') => {
       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     }
     if (method === 'POST') {
-      options.body = JSON.stringify({ ...data, traceId: uuidv4() }) // body data type must match "Content-Type" header
+      options.body = JSON.stringify({ ...data }) // body data type must match "Content-Type" header
     }
     let finalUrl = url;
     if (method === 'GET') {
@@ -97,12 +90,14 @@ export const request = (url: string, data: any, method: 'POST' | 'GET') => {
       // 权限问题
       if (response.status === 401) {
         resolve(checkTokenRefreshStatus(url, data, method))
+        return
       }
-      return;
+      reject(response)
+      return
     }
-    if (response.headers.get('Content-Type') === 'application/json') {
+    if (response.headers.get('Content-Type')?.includes('application/json')) {
       // 请求正常
-      const backData: ApiData = await response.json()
+      const backData = await response.json()
       resolve(backData)
       return;
     }

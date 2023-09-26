@@ -10,17 +10,13 @@
           {{ title }}
         </q-toolbar-title>
         <q-btn flat label="个人博客" @click="goBlog" />
-        <q-btn flat label="UniAPI" @click="goUniAPI" />
+        <q-btn flat label="API文档" @click="goUniAPI" />
         <a v-show="false" ref="blogBtnRef" href="https://huaqinda.com" target="_blank" rel="noopener noreferrer"></a>
         <a v-show="false" ref="uniAPIBtnRef" href="http://uniapi.top" target="_blank" rel="noopener noreferrer"></a>
         <q-toggle :model-value="darkThemeStatus" @update:model-value="toggleDarkTheme" checked-icon="dark_mode"
           color="blue" unchecked-icon="sunny" />
-        <q-btn round color="white" @click="goPersonalPage" v-if="userInfo.id">
-          <q-avatar>
-            <img :src="userInfo.avatar" />
-          </q-avatar>
-        </q-btn>
-        <q-btn @click="goLogin" v-else>
+        <q-btn flat :label="userInfo.nickname" @click="goPersonalPage" v-if="userInfo.id" />
+        <q-btn flat @click="goLogin" v-else>
           登陆
         </q-btn>
       </q-toolbar>
@@ -41,6 +37,7 @@
           </q-item>
         </q-list>
       </q-scroll-area>
+
     </q-drawer>
 
     <q-page-container>

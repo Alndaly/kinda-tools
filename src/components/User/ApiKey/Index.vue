@@ -1,32 +1,31 @@
 <template>
-  <div class="q-pa-md">
-    <q-table flat bordered ref="tableRef" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination"
-      :loading="loading" :filter="filter" binary-state-sort @request="onRequest">
-      <template v-slot:top>
-        <div class="q-mr-md text-h6 text-weight-bold">APIKEY</div>
-        <q-btn round outline color="primary" icon="add" size="sm" @click="onAddApiKey" />
-        <q-space />
-        <q-input borderless dense debounce="300" v-model="filter" placeholder="搜索">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </template>
-      <template v-slot:body-cell-action="props">
-        <q-td :props="props">
-          <q-btn outline color="negative" label="停用" size="sm" @click="onDeleteApiKey(props.row)" />
-        </q-td>
-      </template>
-      <template v-slot:body-cell-key="props">
-        <q-td :props="props">
-          <div class="flex row items-center">
-            <span class="q-mr-md">{{ props.row.key }}</span>
-            <q-btn outline color="primary" icon="content_copy" size="xs" @click="onCopyApiKey(props.row)" />
-          </div>
-        </q-td>
-      </template>
-    </q-table>
-  </div>
+  <q-table flat bordered ref="tableRef" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination"
+    :loading="loading" :filter="filter" binary-state-sort @request="onRequest">
+    <template v-slot:top>
+      <div class="q-mr-md text-h6 text-weight-bold">APIKEY</div>
+      <q-btn round outline color="primary" icon="add" size="sm" @click="onAddApiKey" />
+      <q-space />
+      <q-input borderless dense debounce="300" v-model="filter" placeholder="搜索">
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+    </template>
+    <template v-slot:body-cell-action="props">
+      <q-td :props="props">
+        <q-btn outline color="negative" label="停用" size="sm" @click="onDeleteApiKey(props.row)" />
+      </q-td>
+    </template>
+    <template v-slot:body-cell-key="props">
+      <q-td :props="props">
+        <div class="flex row items-center">
+          <span class="q-mr-md">{{ props.row.key }}</span>
+          <q-btn dense class="q-pa-sm" outline color="primary" icon="content_copy" size="xs"
+            @click="onCopyApiKey(props.row)" />
+        </div>
+      </q-td>
+    </template>
+  </q-table>
 </template>
 
 <script setup lang="ts">

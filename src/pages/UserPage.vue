@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <q-page padding>
     <router-view></router-view>
-  </div>
+  </q-page>
 </template>
