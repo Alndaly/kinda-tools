@@ -106,8 +106,8 @@ module.exports = configure(function (/* ctx */) {
       open: true, // opens browser window automatically
       proxy: {
         '/uniApi': {
-          target: 'http://127.0.0.1:8000',
-          // target: 'https://api.uniapi.top',
+          // target: 'http://127.0.0.1:8000',
+          target: 'https://api.uniapi.top',
           changeOrigin: true,
           // secure: false,
           rewrite: (path) => {

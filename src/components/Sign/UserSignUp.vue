@@ -3,7 +3,7 @@
     <q-card-section>
       <div class="q-pt-lg">
         <div class="col text-h4 text-weight-bold ellipsis">注册</div>
-        <div class="col q-mt-sm text-body1 ellipsis">期待你的加入</div>
+        <div class="col q-mt-sm text-body1 ellipsis">欢迎使用UniAPI服务</div>
       </div>
     </q-card-section>
     <q-card-section>

@@ -2,10 +2,7 @@
   <q-card class="no-shadow bg-transparent" :style="`padding: ${$q.screen.gt.xs ? '0 100px' : '0 20px'} `">
     <q-card-section>
       <div>
-        <div class="col text-h4 text-weight-bold ellipsis">登录</div>
-        <div class="col q-mt-sm text-body1 ellipsis">
-          输入你的邮箱和密码登录
-        </div>
+        <div class="col text-h4 text-weight-bold ellipsis">欢迎使用UniAPI服务</div>
       </div>
     </q-card-section>
     <q-card-section>
