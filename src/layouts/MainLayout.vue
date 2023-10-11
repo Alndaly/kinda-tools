@@ -9,7 +9,7 @@
         <q-toolbar-title class="cursor-pointer" @click="goHomePage">
           {{ title }}
         </q-toolbar-title>
-        <q-btn flat label="个人博客" @click="goBlog" />
+        <q-btn flat label="我的博客" @click="goBlog" />
         <q-btn flat label="API文档" @click="goUniAPI" />
         <a v-show="false" ref="blogBtnRef" href="https://huaqinda.com" target="_blank" rel="noopener noreferrer"></a>
         <a v-show="false" ref="uniAPIBtnRef" href="http://uniapi.top" target="_blank" rel="noopener noreferrer"></a>
