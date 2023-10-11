@@ -5,7 +5,7 @@ import {
   createWebHashHistory,
   createWebHistory,
 } from 'vue-router';
-
+import cache from '@/utils/cache';
 import routes from './routes';
 
 /*
@@ -31,6 +31,14 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
+
+  Router.beforeEach((to, from, next) => {
+    if (cache.directGet('access_token') || (to.fullPath === '/sign/login') || (to.fullPath === '/sign/signUp')) {
+      next()
+    } else {
+      next('/sign/login')
+    }
+  })
 
   return Router;
 });
