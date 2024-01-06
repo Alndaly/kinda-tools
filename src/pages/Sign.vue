@@ -11,7 +11,7 @@
           <q-img src="https://oss.kinda.info/image/202401011535300.jpg"
             :img-class="$q.dark.isActive ? 'custom-image' : ''" no-native-menu fit="cover"
             style="height: 100%; width: 100%">
-            <div class="absolute absolute-center text-center bg-transparent">
+            <div class="absolute absolute-center text-center bg-transparent poem text-black">
               <div class="text-h5 text-weight-bolder" style="font-family: 'LXGWWenKaiGBScreen'">
                 醉后不知天在水，满船清梦压星河。
               </div>
@@ -50,5 +50,10 @@ if ((hour >= 18 && hour <= 24) || (hour >= 0 && hour <= 6)) {
 
 .custom-image {
   filter: saturate(50%);
+}
+
+.poem {
+  backdrop-filter: blur(10px);
+  width: 100%;
 }
 </style>
