@@ -8,7 +8,8 @@
         </div>
         <q-card v-if="$q.screen.gt.sm" class="col-md-6 col-sm-12 col-xs-12 q-mb-md no-shadow no-border window-height"
           square>
-          <q-img src="/images/login.jpg" :img-class="$q.dark.isActive ? 'custom-image' : ''" no-native-menu fit="cover"
+          <q-img src="https://oss.kinda.info/image/202401011535300.jpg"
+            :img-class="$q.dark.isActive ? 'custom-image' : ''" no-native-menu fit="cover"
             style="height: 100%; width: 100%">
             <div class="absolute absolute-center text-center bg-transparent">
               <div class="text-h5 text-weight-bolder" style="font-family: 'LXGWWenKaiGBScreen'">
