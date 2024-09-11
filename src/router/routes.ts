@@ -11,6 +11,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/DashBoard.vue')
       },
       {
+        path: 'license',
+        component: () => import('pages/LicensePage.vue')
+      },
+      {
         path: 'user',
         component: () => import('pages/UserPage.vue'),
         children: [

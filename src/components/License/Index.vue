@@ -1,12 +1,9 @@
 <template>
-  <q-banner inline-actions rounded class="bg-orange text-white q-mb-lg">
-    注意这个apikey并非license，如非必要，请不要将这个码告诉他人，否则可能导致你的uniapi账号被他人恶意使用。
-  </q-banner>
   <q-table flat bordered ref="tableRef" :rows="rows" :columns="columns" row-key="id" v-model:pagination="pagination"
     :loading="loading" :filter="filter" binary-state-sort @request="onRequest">
     <template v-slot:top>
-      <div class="q-mr-md text-h6 text-weight-bold">APIKEY</div>
-      <q-btn round outline color="primary" icon="add" size="sm" @click="onAddApiKey" />
+      <div class="q-mr-md text-h6 text-weight-bold">License</div>
+      <q-btn round outline color="primary" icon="add" size="sm" @click="onAddLicense" />
       <q-space />
       <q-input borderless dense debounce="300" v-model="filter" placeholder="搜索">
         <template v-slot:append>
@@ -16,15 +13,15 @@
     </template>
     <template v-slot:body-cell-action="props">
       <q-td :props="props">
-        <q-btn outline color="negative" label="停用" size="sm" @click="onDeleteApiKey(props.row)" />
+        <q-btn outline color="negative" label="停用" size="sm" @click="onDeleteLicense(props.row)" />
       </q-td>
     </template>
-    <template v-slot:body-cell-key="props">
+    <template v-slot:body-cell-detail="props">
       <q-td :props="props">
         <div class="flex row items-center">
-          <span class="q-mr-md">{{ props.row.key }}</span>
+          <span class="q-mr-md">{{ props.row.detail }}</span>
           <q-btn dense class="q-pa-sm" outline color="primary" icon="content_copy" size="xs"
-            @click="onCopyApiKey(props.row)" />
+            @click="onCopyLicense(props.row)" />
         </div>
       </q-td>
     </template>
@@ -32,14 +29,15 @@
 </template>
 
 <script setup lang="ts">
-import { addApiKey, deleteApiKey, getApiKey } from '@/services/user';
+import { addLicense, deleteLicense, getLicense } from '@/services/license';
 import message from '@/utils/message';
 import { ref, onMounted } from 'vue'
 import { copyToClipboard } from 'quasar';
 
 const columns = [
   { name: 'id', label: 'ID', align: 'left', field: 'id' },
-  { name: 'key', label: 'APIKEY', align: 'left', field: 'key' },
+  { name: 'detail', label: 'Detail', align: 'left', field: 'detail' },
+  { name: 'is_used', label: '是否被使用', align: 'left', field: 'is_used' },
   { name: 'create_time', align: 'left', label: '创建时间', field: 'create_time' },
   { name: 'action', align: 'left', label: '操作', field: 'action' }
 ]
@@ -61,7 +59,7 @@ const onRequest = async (props) => {
   const { page, rowsPerPage, sortBy } = props.pagination
 
   loading.value = true
-  const [res, err] = await getApiKey({ page_num: page - 1, page_size: rowsPerPage, keyword: filter.value })
+  const [res, err] = await getLicense({ page_num: page - 1, page_size: rowsPerPage, keyword: filter.value })
 
   if (err) {
     message.error('出错啦')
@@ -79,20 +77,20 @@ const onRequest = async (props) => {
   loading.value = false
 }
 
-const onCopyApiKey = (props: any) => {
-  copyToClipboard(props.key).then(res => message.success('复制成功')).catch(err => message.error('复制失败'))
+const onCopyLicense = (props: any) => {
+  copyToClipboard(props.detail).then(res => message.success('复制成功')).catch(err => message.error('复制失败'))
 }
 
-const onDeleteApiKey = async (props) => {
-  const [res, err] = await deleteApiKey({ id: props.id });
+const onDeleteLicense = async (props) => {
+  const [res, err] = await deleteLicense({ id: props.id });
   if (err) {
     message.error('出错啦');
   }
   tableRef.value.requestServerInteraction()
 }
 
-const onAddApiKey = async () => {
-  const [res, err] = await addApiKey();
+const onAddLicense = async () => {
+  const [res, err] = await addLicense();
   if (err) {
     message.error('出错啦');
   }

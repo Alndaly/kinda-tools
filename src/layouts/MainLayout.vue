@@ -9,7 +9,6 @@
         <q-toolbar-title class="cursor-pointer" @click="goHomePage">
           {{ title }}
         </q-toolbar-title>
-        <q-btn flat label="我的博客" @click="goBlog" />
         <q-btn flat label="API文档" @click="goUniAPI" />
         <a v-show="false" ref="blogBtnRef" href="https://huaqinda.com" target="_blank" rel="noopener noreferrer"></a>
         <a v-show="false" ref="uniAPIBtnRef" href="http://uniapi.top" target="_blank" rel="noopener noreferrer"></a>
@@ -29,11 +28,14 @@
           <q-item clickable v-ripple to="/dashboard">
             <q-item-section>看板</q-item-section>
           </q-item>
-          <q-item clickable v-ripple to="/user/api-key">
-            <q-item-section>APIKEY</q-item-section>
+          <q-item clickable v-ripple to="/license">
+            <q-item-section>License</q-item-section>
           </q-item>
           <q-item clickable v-ripple to="/user/info">
             <q-item-section>我的</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple to="/user/api-key">
+            <q-item-section>APIKEY</q-item-section>
           </q-item>
         </q-list>
       </q-scroll-area>
@@ -92,9 +94,5 @@ const goHomePage = () => {
 
 const goUniAPI = () => {
   uniAPIBtnRef.value && uniAPIBtnRef.value.click()
-}
-
-const goBlog = () => {
-  blogBtnRef.value && blogBtnRef.value.click()
 }
 </script>
